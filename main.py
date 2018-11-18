@@ -23,8 +23,15 @@ while isRunning:
         if event.type == pygame.QUIT:
             isRunning  = False
 
-    hero_pos[0] += 10
-    hero_pos[1] += 10
+    keystate = pygame.key.get_pressed()
+    if keystate[pygame.K_LEFT]:
+        hero_pos[0] -= 10
+    if keystate[pygame.K_RIGHT]:
+        hero_pos[0] += 10
+    if keystate[pygame.K_UP]:
+        hero_pos[1] -= 10
+    if keystate[pygame.K_DOWN]:
+        hero_pos[1] += 10
 
     screen.blit(hero, hero_pos)
 
