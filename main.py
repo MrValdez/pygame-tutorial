@@ -6,6 +6,9 @@ isRunning = True
 pygame.init()
 screen = pygame.display.set_mode(resolution)
 
+hero = pygame.image.load("hero.png")
+hero_pos = [0, 0]
+
 while isRunning:
     for event in pygame.event.get():
         if event.type == pygame.KEYDOWN:
@@ -14,6 +17,8 @@ while isRunning:
 
         if event.type == pygame.QUIT:
             isRunning  = False
+
+    screen.blit(hero, hero_pos)
 
     pygame.display.flip()
 
