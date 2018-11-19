@@ -1,4 +1,19 @@
+# main.py
 import pygame
+
+class Shot:
+    def __init__(self, pos):
+        self.image = pygame.image.load("shot.png").convert()
+        self.image.set_colorkey((255, 128, 128))
+
+        pos = pos[:]
+        pos[0] += 200
+        pos[1] += 50
+
+        self.pos = pos
+
+    def draw(self, screen):
+        screen.blit(self.image, self.pos)
 
 resolution = (640, 480)
 isRunning = True
@@ -11,9 +26,7 @@ hero = pygame.image.load("hero.png").convert()
 hero.set_colorkey((255, 128, 128))
 hero_pos = [0, 0]
 
-shot = pygame.image.load("shot.png").convert()
-shot.set_colorkey((255, 128, 128))
-shot_pos = [-100, -100]
+shots = []
 
 while isRunning:
     screen.fill((255, 255, 255))
@@ -37,12 +50,13 @@ while isRunning:
     if keystate[pygame.K_DOWN]:
         hero_pos[1] += 10
     if keystate[pygame.K_SPACE]:
-        shot_pos = hero_pos[:]
-        shot_pos[0] += 200
-        shot_pos[1] += 50
+        new_shot = Shot(hero_pos)
+        shots.append(new_shot)
 
     screen.blit(hero, hero_pos)
-    screen.blit(shot, shot_pos)
+    
+    for shot in shots:
+        shot.draw(screen)
 
     pygame.display.flip()
 
