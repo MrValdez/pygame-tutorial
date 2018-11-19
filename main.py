@@ -11,6 +11,10 @@ hero = pygame.image.load("hero.png").convert()
 hero.set_colorkey((255, 128, 128))
 hero_pos = [0, 0]
 
+shot = pygame.image.load("shot.png").convert()
+shot.set_colorkey((255, 128, 128))
+shot_pos = [-100, -100]
+
 while isRunning:
     screen.fill((255, 255, 255))
     tick = clock.tick(60)
@@ -32,8 +36,13 @@ while isRunning:
         hero_pos[1] -= 10
     if keystate[pygame.K_DOWN]:
         hero_pos[1] += 10
+    if keystate[pygame.K_SPACE]:
+        shot_pos = hero_pos[:]
+        shot_pos[0] += 200
+        shot_pos[1] += 50
 
     screen.blit(hero, hero_pos)
+    screen.blit(shot, shot_pos)
 
     pygame.display.flip()
 
