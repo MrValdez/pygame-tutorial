@@ -1,8 +1,10 @@
 # main.py
+import os
 import pygame
 from gameobject import Shot, Hero
 
-resolution = (640, 480)
+os.environ["SDL_VIDEO_WINDOW_POS"] = "0,0"
+resolution = (1280, 768)
 isRunning = True
 
 pygame.init()

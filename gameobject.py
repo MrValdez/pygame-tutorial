@@ -1,5 +1,6 @@
 # gameobject.py
 import pygame
+import random
 
 class GameObject:
     def __init__(self, filename, pos):
@@ -35,3 +36,9 @@ class Shot(GameObject):
         super().__init__("shot.png", pos)
         self.pos[0] += 200
         self.pos[1] += 50
+
+        self.speed = random.randint(1, 20)
+
+    def update(self):
+        self.pos[0] += self.speed
+
