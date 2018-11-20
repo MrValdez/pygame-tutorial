@@ -3,13 +3,14 @@ import os
 import pygame
 from gameobject import Shot, Hero
 
-os.environ["SDL_VIDEO_WINDOW_POS"] = "0,0"
+os.environ["SDL_VIDEO_WINDOW_POS"] = "0,20"
 resolution = (1280, 768)
 isRunning = True
 
 pygame.init()
 screen = pygame.display.set_mode(resolution)
 clock = pygame.time.Clock()
+font = pygame.font.SysFont("Courier New", 18)
 
 hero = Hero([0, 0])
 shots = []
@@ -38,6 +39,9 @@ while isRunning:
     hero.draw(screen)
     for shot in shots:
         shot.draw(screen)
+
+    text = font.render("Hello world", False, (0, 0, 0))
+    screen.blit(text, (0, 0))
 
     pygame.display.flip()
 
