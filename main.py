@@ -1,7 +1,8 @@
 # main.py
 import os
 import pygame
-from gameobject import Shot, Hero
+import random
+from gameobject import Shot, Hero, Enemy
 
 os.environ["SDL_VIDEO_WINDOW_POS"] = "0,20"
 resolution = (1280, 768)
@@ -14,6 +15,16 @@ font = pygame.font.SysFont("Courier New", 18)
 
 hero = Hero([0, 0])
 shots = []
+enemies = []
+world = [[hero], shots, enemies]
+
+def spawn_enemy():
+    pos = [random.randint(3000, 10000), random.randint(-10, resolution[1] - 100)]
+    enemy = Enemy(pos)
+    enemies.append(enemy)
+
+for i in range(50):
+    spawn_enemy()
 
 while isRunning:
     screen.fill((255, 255, 255))
@@ -32,16 +43,17 @@ while isRunning:
         new_shot = Shot(hero.pos)
         shots.append(new_shot)
 
-    hero.update()
-    for shot in shots:
-        shot.update()
+    text_str = f"Enemies in game: {len(enemies)}"
+    text = font.render(text_str, False, (0, 0, 0))
+    screen.blit(text, (200, 200))
 
-    hero.draw(screen)
-    for shot in shots:
-        shot.draw(screen)
+    for object_group in world:
+        for object in object_group:
+            object.update()
 
-    text = font.render("Hello world", False, (0, 0, 0))
-    screen.blit(text, (0, 0))
+    for object_group in world:
+        for object in object_group:
+            object.draw(screen)
 
     pygame.display.flip()
 

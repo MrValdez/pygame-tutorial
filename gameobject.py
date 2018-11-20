@@ -42,3 +42,11 @@ class Shot(GameObject):
     def update(self):
         self.pos[0] += self.speed
 
+class Enemy(GameObject):
+    def __init__(self, pos):
+        super().__init__("enemy.png", pos)
+
+        self.speed = random.randint(10, 50)
+
+    def update(self):
+        self.pos[0] -= self.speed
