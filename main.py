@@ -13,13 +13,13 @@ screen = pygame.display.set_mode(resolution)
 clock = pygame.time.Clock()
 font = pygame.font.SysFont("Courier New", 18)
 
-hero = Hero([0, 0])
+hero = Hero([0, 20])
 shots = []
 enemies = []
 world = [[hero], shots, enemies]
 
 def spawn_enemy():
-    pos = [random.randint(3000, 10000), random.randint(-10, resolution[1] - 100)]
+    pos = [random.randint(100, 10000), random.randint(-10, resolution[1] - 100)]
     enemy = Enemy(pos)
     enemies.append(enemy)
 
@@ -38,7 +38,7 @@ def update_world():
         if shot.pos[0] > resolution[0]:
             shots.remove(shot)
             continue
-
+    
         for enemy in enemies:
             has_collided = check_collision(shot.pos, shot.image.get_size(),
                                            enemy.pos, enemy.image.get_size())
@@ -47,9 +47,28 @@ def update_world():
                shots.remove(shot)
                break
 
+class Input():
+    def __init__(self):
+        self.prev_keydown = self.current_keydown = pygame.key.get_pressed()
+
+    def update(self):
+        self.prev_keydown = self.current_keydown
+        self.current_keydown = pygame.key.get_pressed()
+
+    def is_hold(self, key):
+        return self.current_keydown[key]
+
+    def is_down(self, key):
+        return self.current_keydown[key] and not self.prev_keydown[key]
+
+    def is_up(self, key):
+        return not self.current_keydown[key] and self.prev_keydown[key]
+
+input = Input()
+
 while isRunning:
     screen.fill((255, 255, 255))
-    tick = clock.tick(60)
+    tick = clock.tick(8)
 
     for event in pygame.event.get():
         if event.type == pygame.KEYDOWN:
@@ -59,8 +78,8 @@ while isRunning:
         if event.type == pygame.QUIT:
             isRunning  = False
 
-    keystate = pygame.key.get_pressed()
-    if keystate[pygame.K_SPACE]:
+    input.update()
+    if input.is_down(pygame.K_SPACE):
         new_shot = Shot(hero.pos)
         shots.append(new_shot)
 
@@ -77,6 +96,14 @@ while isRunning:
     for object_group in world:
         for object in object_group:
             object.draw(screen)
+
+    button_hold = "Yes" if input.is_hold(pygame.K_SPACE) else "No "
+    button_down = "Yes" if input.is_down(pygame.K_SPACE) else "No "
+    button_up = "Yes" if input.is_up(pygame.K_SPACE) else "No "
+
+    text_str = f"Button held: {button_hold}    Button down: {button_down}    Button up: {button_up}"
+    text = font.render(text_str, False, (0, 0, 0))
+    screen.blit(text, (10, 0))
 
     pygame.display.flip()
 
