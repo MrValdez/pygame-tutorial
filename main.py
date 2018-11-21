@@ -26,6 +26,27 @@ def spawn_enemy():
 for i in range(50):
     spawn_enemy()
 
+def check_collision(box1_pos, box1_size,
+                    box2_pos, box2_size):
+    return (box1_pos[0] + box1_size[0] > box2_pos[0] and
+            box1_pos[0] < box2_pos[0] + box2_size[0] and
+            box1_pos[1] + box1_size[1] > box2_pos[1] and
+            box1_pos[1] < box2_pos[1] + box2_size[1])
+
+def update_world():
+    for shot in shots:
+        if shot.pos[0] > resolution[0]:
+            shots.remove(shot)
+            continue
+
+        for enemy in enemies:
+            has_collided = check_collision(shot.pos, shot.image.get_size(),
+                                           enemy.pos, enemy.image.get_size())
+            if has_collided:
+               enemies.remove(enemy)
+               shots.remove(shot)
+               break
+
 while isRunning:
     screen.fill((255, 255, 255))
     tick = clock.tick(60)
@@ -50,6 +71,8 @@ while isRunning:
     for object_group in world:
         for object in object_group:
             object.update()
+
+    update_world()
 
     for object_group in world:
         for object in object_group:
