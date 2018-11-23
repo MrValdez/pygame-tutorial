@@ -2,7 +2,7 @@
 import os
 import pygame
 import random
-from gameobject import Shot, Hero, Enemy
+from gameobject import Shot, Hero, Enemy, Missile
 
 os.environ["SDL_VIDEO_WINDOW_POS"] = "0,20"
 resolution = (1280, 768)
@@ -40,8 +40,8 @@ def update_world():
             continue
     
         for enemy in enemies:
-            has_collided = check_collision(shot.pos, shot.image.get_size(),
-                                           enemy.pos, enemy.image.get_size())
+            has_collided = check_collision(shot.pos, shot.get_size(),
+                                           enemy.pos, enemy.get_size())
             if has_collided:
                enemies.remove(enemy)
                shots.remove(shot)
@@ -68,7 +68,7 @@ input = Input()
 
 while isRunning:
     screen.fill((255, 255, 255))
-    tick = clock.tick(8)
+    tick = clock.tick(60)
 
     for event in pygame.event.get():
         if event.type == pygame.KEYDOWN:
@@ -83,6 +83,11 @@ while isRunning:
         new_shot = Shot(hero.pos)
         shots.append(new_shot)
 
+    if pygame.mouse.get_pressed()[0]:
+        pos = [hero.pos[0] + 200, hero.pos[1] + 50]
+        new_missile = Missile(pos, pygame.mouse.get_pos())
+        shots.append(new_missile)
+
     text_str = f"Enemies in game: {len(enemies)}"
     text = font.render(text_str, False, (0, 0, 0))
     screen.blit(text, (200, 200))
@@ -96,14 +101,6 @@ while isRunning:
     for object_group in world:
         for object in object_group:
             object.draw(screen)
-
-    button_hold = "Yes" if input.is_hold(pygame.K_SPACE) else "No "
-    button_down = "Yes" if input.is_down(pygame.K_SPACE) else "No "
-    button_up = "Yes" if input.is_up(pygame.K_SPACE) else "No "
-
-    text_str = f"Button held: {button_hold}    Button down: {button_down}    Button up: {button_up}"
-    text = font.render(text_str, False, (0, 0, 0))
-    screen.blit(text, (10, 0))
 
     pygame.display.flip()
 
